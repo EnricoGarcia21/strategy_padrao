@@ -38,22 +38,12 @@ public class Produto {
     public static Produto get(int id, Conexao conexao) { return dao.get(id, conexao); }
     public static List<Produto> get(String filtro, Conexao conexao) { return dao.get(filtro, conexao); }
 
-    public boolean atualizarEstoque(int quantidade, Conexao conexao) {
+   public boolean atualizarEstoque(int quantidade, Conexao conexao) {
         if (movimentoEstoqueStrategy == null || quantidade <= 0 || prodId <= 0) {
             return false;
         }
-
-        return movimentoEstoqueStrategy.executar(this, quantidade, conexao);
-    }
-
-    public boolean baixarEstoque(int quantidade, Conexao conexao) {
-        this.movimentoEstoqueStrategy = new DecrementarEstoqueStrategy();
-        return atualizarEstoque(quantidade, conexao);
-    }
-
-    public boolean adicionarEstoque(int quantidade, Conexao conexao) {
         this.movimentoEstoqueStrategy = new IncrementarEstoqueStrategy();
-        return atualizarEstoque(quantidade, conexao);
+        return movimentoEstoqueStrategy.executar(this, quantidade, conexao);
     }
 
     public int getProdId() { return prodId; }
